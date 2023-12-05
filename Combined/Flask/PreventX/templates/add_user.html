@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addUser.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Add User- Prevent-X</title>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-pic">
+                    PX
+                </div>
+                <div>
+                    {{ username }}<br>
+                    <small>{{ email }}</small>
+                </div>
+            </div>
+
+            <ul class="menu">
+                <h2>Menu</h2>
+                <li><button class="home" onclick="window.location.href='{{ url_for('home') }}';"><span
+                            class="icon"></span>Home</button></li>
+                <br />
+                <li><button class="camera" onclick="window.location.href='{{ url_for('camerafeed') }}';"><span
+                            class="icon"></span>View Camera Feed</button></li>
+                <br />
+                <li><button class="user" onclick="window.location.href='{{ url_for('add_user') }}';"><span
+                            class="icon"></span>Add User</button></li>
+                <br />
+                <li><button class="alert" onclick="window.location.href='{{ url_for('alert') }}';"><span
+                            class="icon"></span>View Alert Logs</button></li>
+                <br />
+                <li><button class="analytics" onclick="window.location.href='{{ url_for('view_analytics') }}';"><span
+                            class="icon"></span>View Analytics</button></li>
+                <br />
+                <li><button class="logout"><span class="icon"></span>Logout</button></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+         <div id="notificationContainer"></div>
+        <img src="{{ url_for('static', filename='images/company_logo.jpeg') }}" alt="Company Logo" class="company-logo">
+
+        <div class="form-container">
+            <div class="form-title">
+                <h2>Add Account</h2><br />
+                <p>Add an account into the PreventX System</p>
+            </div>
+            <form action="{{ url_for('submit_user') }}" method="post" >
+                <div class="input-group">
+                    <span class="input-label">Name</span>
+                    <input type="text" placeholder="Name" name="name" pattern="^[A-Z][a-z]*$" title="Please enter a name only with characters and the first letter should be a capital "required>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Email</span>
+                    <input type="email" placeholder="Email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Password</span>
+                    <input type="password" id="password" placeholder="Password"
+                        pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$"
+                        title="Please enter a password with at least 8 characters, including alphanumeric and special characters."
+                        required>
+                    <span toggle="#password" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Confirm Password</span>
+                    <input type="password" id="confirmPassword" name="password" placeholder="Confirm" oninput="validatePassword()"
+                        required>
+                    <span toggle="#confirmPassword" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
+                    <div id="passwordError" class="password-error">*Passwords do not match!</div>
+                </div>
+                <div class="input-group">
+                    <span class="input-label">Employee ID</span>
+                    <input type="text" placeholder="Employee ID" pattern= "^[0-9]{6,7}$" name="employee_id" title= "Please enter only numerical characters" required>
+                </div>
+                <button type="submit">REGISTER</button>
+            </form>
+        </div>
+
+
+<audio id="alertSound" src="{{ url_for('static', filename='notif.mp3') }}" type="audio/mp3"></audio>
+
+    </div>
+      <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Logout</h2>
+            <p>Are you sure?</p>
+            <div class="modal-buttons">
+                <button id="cancelButton">Cancel</button>
+                <button id="confirmLogout">LOGOUT</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // References to the logout button and modal elements
+            const logoutButton = document.querySelector('.logout');
+            const logoutModal = document.getElementById('logoutModal');
+            const overlay = document.querySelector('#overlay');
+            const cancelButton = document.getElementById('cancelButton');
+            const confirmLogout = document.getElementById('confirmLogout');
+
+            // Show the modal when the logout button is clicked
+            logoutButton.addEventListener('click', function () {
+                logoutModal.style.display = 'block';
+            });
+
+            // Hide the modal when the cancel button is clicked
+            cancelButton.addEventListener('click', function () {
+                logoutModal.style.display = 'none';
+            });
+
+            // Implement your logout functionality when the confirm button is clicked
+            confirmLogout.addEventListener('click', function () {
+                // Add your logout code here
+                console.log('Logging out...');
+                logoutModal.style.display = 'login.html';
+                window.location.href = '/logout';
+            });
+
+            logoutButton.addEventListener('click', function () {
+                overlay.style.display = 'block'; // Show the overlay when the popup is displayed
+            });
+
+            confirmLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+            cancelLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+
+        });
+
+    </script>
+    <script>
+        // Script to show and hide password using the eye icon
+        const togglePassword = document.querySelectorAll(".toggle-password");
+
+        togglePassword.forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                const input = document.querySelector(toggle.getAttribute("toggle"));
+                if (input.getAttribute("type") == "password") {
+                    input.setAttribute("type", "text");
+                    toggle.classList.add("fa-eye");
+                    toggle.classList.remove("fa-eye-slash");
+                } else {
+                    input.setAttribute("type", "password");
+                    toggle.classList.add("fa-eye-slash");
+                    toggle.classList.remove("fa-eye");
+                }
+            });
+        });
+    </script>
+    <script>
+        function validatePassword() {
+            var password = document.getElementById("password");
+            var confirmPassword = document.getElementById("confirmPassword");
+            var passwordError = document.getElementById("passwordError");
+
+            if (password.value !== confirmPassword.value) {
+                passwordError.style.display = "block"; // show the error message
+            } else {
+                passwordError.style.display = "none";  // hide the error message
+            }
+        }
+    </script>
+
+<script type="module">
+    import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('new_alert', function (data) {
+            var notification = document.createElement('div');
+            notification.className = 'notification';
+
+            var closeBtn = document.createElement('span');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.className = 'close-btn';
+
+            // Close button functionality
+            closeBtn.onclick = function() {
+                notification.remove();
+            };
+
+            notification.appendChild(closeBtn);
+            notification.appendChild(document.createTextNode("New Alert: " + data.category));
+
+            document.getElementById('notificationContainer').appendChild(notification);
+
+            // Auto-remove after 5 seconds
+            setTimeout(function() {
+                notification.remove();
+            }, 5000);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('new_alert', function (data) {
+        // Play the alert sound
+        var sound = document.getElementById('alertSound');
+        sound.play();
+
+        // Existing code to create and append the notification...
+    });
+});
+
+
+
+</script>
+
+
+
+
+
+
+</body>
+</html>

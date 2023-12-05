@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/camerafeed.css') }}">
+    <title>Camera Feed</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-pic">
+                    PX
+                </div>
+                <div>
+                    {{ username }}<br>
+                    <small>{{ email }}</small>
+                </div>
+            </div>
+
+            <ul class="menu">
+            <h2>Menu</h2>
+            <li><button class="home" onclick="window.location.href='{{ url_for('home') }}';"><span class="icon"></span>Home</button></li>
+            <br />
+            <li><button class="camera" onclick="window.location.href='{{ url_for('camerafeed') }}';"><span class="icon"></span>View Camera Feed</button></li>
+            <br />
+            <li><button class="user" onclick="window.location.href='{{ url_for('add_user') }}';"><span class="icon"></span>Add User</button></li>
+            <br />
+            <li><button class="alert" onclick="window.location.href='{{ url_for('alert') }}';"><span class="icon"></span>View Alert Logs</button></li>
+            <br />
+            <li><button class="analytics" onclick="window.location.href='{{ url_for('view_analytics') }}';"><span class="icon"></span>View Analytics</button></li>
+            <br />
+            <li><button class="logout"><span class="icon"></span>Logout</button></li>
+
+        </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <img src="{{ url_for('static', filename='images/company_logo.jpeg') }}" alt="Company Logo" class="company-logo">
+        <div id="notificationContainer"></div>
+        <div class="form-container">
+            <h2>Camera Feed</h2>
+        </div>
+
+        <!-- The img element for the video feed -->
+       <div class="video-container">
+           <img id="video_feed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+       </div>
+
+       <!-- Wrap forms in a container -->
+            <div class="forms-container">
+                <form id="input-form" method="post" action="{{ url_for('set_max_people_allowed') }}">
+                    <h3>Enter Maximum Number of People:</h3>
+                    <input type="number" id="input-number" name="inputNumber" placeholder="Enter a number">
+                    <button type="submit">Submit</button>
+                </form>
+
+                <form id="input-form-id" method="post" action="{{ url_for('set_max_audio_threshold') }}">
+                    <h3>Enter Maximum Audio Threshold:</h3>
+                    <input type="number" id="input-number-id" name="inputThreshold" placeholder="Enter a threshold">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+        <p id="demo"></p>
+
+    </div>
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Logout</h2>
+            <p>Are you sure?</p>
+            <div class="modal-buttons">
+                <button id="cancelButton">Cancel</button>
+                <button id="confirmLogout">LOGOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="alertSound" src="{{ url_for('static', filename='notif.mp3') }}" type="audio/mp3"></audio>
+
+    <script type="text/javascript">
+        // If the feed does not refresh automatically, you can add JavaScript to do so.
+        // Add JavaScript if you want to handle the form submission without reloading the page.
+       document.getElementById('input-form').onsubmit = function(event) {
+            event.preventDefault();
+            var inputNumber = document.getElementById('input-number').value;
+            fetch("{{ url_for('set_max_people_allowed') }}", {
+                method: 'POST',
+                body: new FormData(document.getElementById('input-form'))
+            }).then(response => response.text())
+            .then(data => {
+                document.getElementById('demo').innerHTML = "Max number of people allowed is updated to " + inputNumber;
+            }).catch(error => console.error('Error:', error));
+            };
+    </script>
+
+    <script type="text/javascript">
+        document.getElementById('input-form-id').onsubmit = function(event) {
+            event.preventDefault();
+            var inputNumber = document.getElementById('input-number-id').value;
+            fetch("{{ url_for('set_max_audio_threshold') }}", {
+                method: 'POST',
+                body: new FormData(document.getElementById('input-form-id'))
+            }).then(response => response.text())
+            .then(data => {
+                document.getElementById('demo').innerHTML = "Max audio threshold is updated to " + inputNumber;
+            }).catch(error => console.error('Error:', error));
+        };
+    </script>
+
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // References to the logout button and modal elements
+            const logoutButton = document.querySelector('.logout');
+            const logoutModal = document.getElementById('logoutModal');
+            const overlay = document.querySelector('#overlay');
+            const cancelButton = document.getElementById('cancelButton');
+            const confirmLogout = document.getElementById('confirmLogout');
+
+            // Show the modal when the logout button is clicked
+            logoutButton.addEventListener('click', function () {
+                logoutModal.style.display = 'block';
+            });
+
+            // Hide the modal when the cancel button is clicked
+            cancelButton.addEventListener('click', function () {
+                logoutModal.style.display = 'none';
+            });
+
+            // Implement your logout functionality when the confirm button is clicked
+            confirmLogout.addEventListener('click', function () {
+                // Add your logout code here
+                console.log('Logging out...');
+                logoutModal.style.display = 'login.html';
+                window.location.href = '/logout';
+            });
+
+            logoutButton.addEventListener('click', function () {
+                overlay.style.display = 'block'; // Show the overlay when the popup is displayed
+            });
+
+            confirmLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+            cancelLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+
+        });
+
+    </script>
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+            socket.on('new_alert', function (data) {
+                var notification = document.createElement('div');
+                notification.className = 'notification';
+
+                var closeBtn = document.createElement('span');
+                closeBtn.innerHTML = '&times;';
+                closeBtn.className = 'close-btn';
+
+                // Close button functionality
+                closeBtn.onclick = function() {
+                    notification.remove();
+                };
+
+                notification.appendChild(closeBtn);
+                notification.appendChild(document.createTextNode("New Alert: " + data.category));
+
+                document.getElementById('notificationContainer').appendChild(notification);
+
+                // Auto-remove after 5 seconds
+                setTimeout(function() {
+                    notification.remove();
+                }, 5000);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('new_alert', function (data) {
+            // Play the alert sound
+            var sound = document.getElementById('alertSound');
+            sound.play();
+
+            // Existing code to create and append the notification...
+        });
+    });
+
+    </script>
+
+
+</body>
+</html>

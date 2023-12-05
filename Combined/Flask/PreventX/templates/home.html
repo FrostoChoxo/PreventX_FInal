@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <title>Dashboard -Prevent-X</title>
+
+
+</head>
+<body>
+
+    <div id="userAddedSuccess" style="display: none;">
+        User added successfully!
+    </div>
+    <div id="userAddedFailure" style="display: none;">
+        Failed to add user. Please try again.
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-pic">
+                    PX
+                </div>
+                <div>
+                    {{ username }}<br>
+                    <small>{{ email }}</small>
+                </div>
+            </div>
+
+            <ul class="menu">
+            <h2>Menu</h2>
+            <li><button class="home" onclick="window.location.href='{{ url_for('home') }}';"><span class="icon"></span>Home</button></li>
+            <br />
+            <li><button class="camera" onclick="window.location.href='{{ url_for('camerafeed') }}';"><span class="icon"></span>View Camera Feed</button></li>
+            <br />
+            <li><button class="user" onclick="window.location.href='{{ url_for('add_user') }}';"><span class="icon"></span>Add User</button></li>
+            <br />
+            <li><button class="alert" onclick="window.location.href='{{ url_for('alert') }}';"><span class="icon"></span>View Alert Logs</button></li>
+            <br />
+            <li><button class="analytics" onclick="window.location.href='{{ url_for('view_analytics') }}';"><span class="icon"></span>View Analytics</button></li>
+            <br />
+            <li><button class="logout"><span class="icon"></span>Logout</button></li>
+
+        </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <img src="{{ url_for('static', filename='images/company_logo.jpeg') }}" alt="Company Logo" class="company-logo">
+        <div id="notificationContainer"></div>
+
+
+        <div class="form-container">
+            <h2>Home</h2>
+            <div class="charts-row">
+                <div class="recent-alerts">
+                    <h3>Recent Alerts</h3>
+                    <div id="homeAlertsContainer">
+                        <!-- Recent alerts will go here -->
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Daily Stats</h3>
+                    <canvas id="dailyAlertsChart"></canvas>
+                </div>
+            </div>
+            <div class="charts-row">
+                <div class="chart-container">
+                    <h3 class="chart-title">Monthly PPE Alerts Status</h3>
+                    <div id="ppeGaugeChart"></div>
+                </div>
+                <div class="chart-container">
+                    <h3>PPE Chart</h3>
+                    <canvas id="ppeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Logout</h2>
+            <p>Are you sure?</p>
+            <div class="modal-buttons">
+                <button id="cancelButton">Cancel</button>
+                <button id="confirmLogout">LOGOUT</button>
+            </div>
+        </div>
+    </div>
+
+<audio id="alertSound" src="{{ url_for('static', filename='notif.mp3') }}" type="audio/mp3"></audio>
+
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // References to the logout button and modal elements
+            const logoutButton = document.querySelector('.logout');
+            const logoutModal = document.getElementById('logoutModal');
+            const overlay = document.querySelector('#overlay');
+            const cancelButton = document.getElementById('cancelButton');
+            const confirmLogout = document.getElementById('confirmLogout');
+
+            // Show the modal when the logout button is clicked
+            logoutButton.addEventListener('click', function () {
+                logoutModal.style.display = 'block';
+            });
+
+            // Hide the modal when the cancel button is clicked
+            cancelButton.addEventListener('click', function () {
+                logoutModal.style.display = 'none';
+            });
+
+            // Implement your logout functionality when the confirm button is clicked
+            confirmLogout.addEventListener('click', function () {
+                // Add your logout code here
+                console.log('Logging out...');
+                logoutModal.style.display = 'login.html';
+                window.location.href = '/logout';
+            });
+
+            logoutButton.addEventListener('click', function () {
+                overlay.style.display = 'block'; // Show the overlay when the popup is displayed
+            });
+
+            confirmLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+            cancelLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+
+        });
+
+    </script>
+
+    
+<script type="module">
+    import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+     function addSimpleAlertToHomePage(data) {
+    const homeAlertsContainer = document.getElementById('homeAlertsContainer'); // The container for alerts on the home page
+
+    if (!homeAlertsContainer) return; // If the container is not found, exit the function
+
+    // Check if the number of alerts is at the limit (5)
+    if (homeAlertsContainer.children.length >= 8) {
+        // Remove the oldest alert
+        homeAlertsContainer.removeChild(homeAlertsContainer.children[0]);
+    }
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'home-alert';
+    alertDiv.innerHTML = `Alert: ${data.category} at ${data.alert_time}`;
+
+    homeAlertsContainer.appendChild(alertDiv);
+}
+
+    fetch('/get_alerts')
+        .then(response => response.json())
+        .then(alerts => {
+            alerts.forEach(alert => addSimpleAlertToHomePage(alert));
+        })
+        .catch(error => console.error('Error fetching alerts:', error));
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('new_alert', function (data) {
+            addSimpleAlertToHomePage(data);
+            var notification = document.createElement('div');
+            notification.className = 'notification';
+
+            var closeBtn = document.createElement('span');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.className = 'close-btn';
+
+            // Close button functionality
+            closeBtn.onclick = function() {
+                notification.remove();
+            };
+
+            notification.appendChild(closeBtn);
+            notification.appendChild(document.createTextNode("New Alert: " + data.category));
+
+            document.getElementById('notificationContainer').appendChild(notification);
+
+            // Auto-remove after 5 seconds
+            setTimeout(function() {
+                notification.remove();
+            }, 5000);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('new_alert', function (data) {
+        // Play the alert sound
+        var sound = document.getElementById('alertSound');
+        sound.play();
+
+        // Existing code to create and append the notification...
+    });
+});
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    fetch('/ppe_alerts_data')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('ppeChart').getContext('2d');
+            const ppeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        label: 'Number of Alerts',
+                        data: Object.values(data),
+                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching PPE alerts data:', error));
+});
+</script>
+
+<!--    for pie chart-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    fetch('/daily_alerts_data')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('dailyAlertsChart').getContext('2d');
+            const dailyAlertsChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    aspectRatio: 1
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching daily alerts data:', error));
+});
+
+</script>
+
+<script>
+google.charts.load('current', {'packages':['gauge']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+    fetch('/monthly_ppe_alerts_status')
+        .then(response => response.json())
+        .then(data => {
+            var chartData = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['PPE Alerts', data.ppe_alerts_count]
+            ]);
+
+            const container = document.getElementById('ppeGaugeChart');
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            var options = {
+                width: containerWidth,
+                height: containerHeight,
+                redFrom: 90, redTo: 100,
+                yellowFrom: 75, yellowTo: 90,
+                minorTicks: 5
+            };
+
+            var chart = new google.visualization.Gauge(document.getElementById('ppeGaugeChart'));
+            chart.draw(chartData, options);
+        })
+        .catch(error => console.error('Error:', error));
+}
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,422 @@
+body, html {
+    height: 100%;
+    overflow: hidden;
+
+}
+
+body {
+    font-family: 'MyCustomFont';
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar {
+    border-right: 50px solid #FFCC3B;
+    width: 300px;
+    background-color: #f4f4f4;
+    height: 100vh;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.menu {
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 20px; /* Spacing at the top of the menu */
+
+}
+
+.menu li {
+    margin: 0;
+    padding: 0;
+    background-color: #F4F4F4; /* Default background */
+}
+
+.menu button {
+    width: 90%; /* Reduce the width to 90% */
+    height: 50px;
+    background: #ddd;
+    border: none;
+    text-align: left;
+    padding: 20px; /* Adjusted padding for larger touch areas */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex; /* to use flexbox layout */
+    align-items: center; /* vertically center the text and icon */
+    color: #555; /* default text color */
+    border-radius: 20px;
+    margin: 0 auto; /* Center the button horizontally */
+    font-family: 'MyCustomFont';
+}
+
+.menu button span.icon {
+    width: 24px; /* or any desired size */
+    height: 24px;
+    margin-right: 10px; /* spacing between the icon and text */
+    display: inline-block; /* to apply width and height */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.menu button:hover {
+    background-color: #ffd35b;
+    color: #fff; /* change text color on hover */
+}
+
+.menu button.home {
+    background: #FFCC3B; /* Background color for the specific button */
+    color: #000000; /* Text color for the specific button */
+}
+
+.main-content {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    overflow: auto;
+}
+
+.company-logo {
+    position: absolute;
+    top: 2px;
+    right: 20px;
+    width: 150px; /* adjust based on the logo's desired size */
+}
+
+.menu button:not(:last-child) {
+    border-bottom: 1px solid #e1e1e1; /* Separators */
+}
+.modal {
+    align-items: center;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black with opacity */
+}
+.charts-row {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 20px; /* Space between the items */
+    margin-bottom: 20px; /* Space below the row */
+}
+
+/* Flex items - charts and alerts */
+.chart-container, .recent-alerts {
+    flex: 1; /* Allow items to grow */
+    /* Adjust the flex-basis and max-width as per your design */
+    flex-basis: calc(50% - 20px); /* Initial width minus the gap */
+    max-width: calc(50% - 20px); /* Max width minus the gap */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+.modal-content {
+    background-color: #e6e6e6; /* Modal background color */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 280px; /* Set the width to 280px */
+    height: 152px; /* Set the height to 152px */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    border-radius: 10px; /* Rounded corners */
+
+    /* Centering the modal */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; /* Using flexbox for centering content */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+}
+
+/* Text inside the modal */
+.modal-content h2,
+.modal-content p {
+    text-align: center; /* Center-align text */
+    width: 100%; /* Ensure the text spans the full width */
+}
+
+/* Add Animation */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 50%; opacity: 1}
+}
+
+/* Rest of the styles remain the same */
+
+.modal-buttons button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s; /* Smooth transition for button background color */
+    border-radius: 5px;
+
+}
+
+.modal-buttons button:hover {
+    background-color: #f2f2f2;
+}
+
+#confirmLogout {
+    background-color: rgb(255, 204, 59); /* Orange */
+    color: black;
+    transition: background-color 0.2s; /* Smooth transition for background color */
+}
+
+#confirmLogout:hover {
+    background-color: rgb(229, 183, 52); /* Slightly darker orange on hover */
+    /* Optionally change other properties like color or box-shadow */
+}
+
+#cancelButton {
+    background-color: white; /* White */
+    color: black;
+    transition: background-color 0.2s; /* Smooth transition for background color */
+}
+
+#cancelButton:hover {
+    background-color: #e6e6e6; /* Light grey background on hover */
+    /* Optionally change other properties like color or box-shadow */
+}
+
+
+/* The Close Button (if you decide to add one later) */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Icons */
+.menu button.home span.icon {
+    background-image: url('../icons/home.png');
+}
+.menu button.camera span.icon {
+    background-image: url('../icons/video.png');
+}
+.menu button.user span.icon {
+    background-image: url('../icons/add-user.png');
+}
+.menu button.alert span.icon {
+    background-image: url('../icons/danger.png');
+}
+.menu button.analytics span.icon {
+    background-image: url('../icons/analytics.png');
+}
+.menu button.logout span.icon {
+    background-image: url('../icons/logout.png');
+}
+
+.notification {
+    background-color: rgb(255, 204, 59);
+    color: black;
+    text-align: center;
+    padding: 13px;
+    position: absolute;
+    top: 10px;
+    width: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    border-radius: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 5px;
+    cursor: pointer;
+    color: black;
+}
+
+.form-container h2{
+    font-size: 60px;
+    border-bottom: 3px solid #f7d63a;
+    display: inline-block;
+    left: 10%;
+    margin-left: 25px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+
+#homeAlertsContainer {
+    margin-top: 20px;
+}
+
+.home-alert {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+}
+
+.recent-alerts {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.chart-container {
+    padding: 15px;
+    background-color: #ffffff; /* White background */
+    border: 1px solid #ddd; /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    /* Remove the max-height if it's causing issues */
+    /* max-height: 800px; */
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden; /* Hide any overflow */
+    margin-bottom: 30px;
+    width: 500px; /* Adjust to desired width */
+    height: 500px; /* Adjust to desired height */
+}
+
+/* Style for the canvas element where the chart is rendered */
+#ppeChart {
+    width: 100%; /* Chart should take up the full width of its container */
+    height: auto; /* Chart height should be auto to maintain aspect ratio */
+}
+
+/* Responsive behavior for smaller screens */
+@media screen and (max-width: 768px) {
+    .chart-container {
+        margin-top: 10px;
+        padding: 10px;
+        max-width: 100%; /* Chart container takes full width on small screens */
+    }
+
+    #ppeChart {
+        height: 300px; /* Fixed height on smaller screens for better visibility */
+    }
+}
+
+
+/* Style for the canvas element where the pie chart is rendered */
+#dailyAlertsChart {
+    width: 100%; /* Full width to fit the container */
+    max-width: 400px; /* Maximum width for the chart */
+    height: auto; /* Auto height for a responsive design */
+    margin: 20px auto; /* Center the chart horizontally and add some margin */
+    padding: 10px; /* Padding around the chart */
+    background-color: #fff; /* White background */
+    text-align: center; /* Center-align the chart */
+}
+
+/* Responsive behavior for smaller screens */
+@media screen and (max-width: 768px) {
+    .pie-chart-container {
+        margin-top: 10px;
+        padding: 10px;
+        max-width: 100%; /* Full width on smaller screens */
+    }
+
+    #dailyAlertsChart {
+        height: 300px; /* Fixed height on smaller screens for better visibility */
+    }
+}
+
+/* CSS for Gauge Chart Container */
+#ppeGaugeChart {
+    width: 100%; /* Full width to fit the container */
+    max-width: 400px; /* Maximum width for the chart */
+    height: 500px; /* Auto height for a responsive design */
+    margin: 20px auto; /* Center the chart horizontally and add some margin */
+    padding: 10px; /* Padding around the chart */
+    background-color: #fff; /* White background */
+    text-align: center; /* Center-align the chart */
+}
+
+/* Optional: Additional styling for a label or title for the chart */
+.chart-title {
+    font-size: 18px; /* Title font size */
+    color: #333; /* Title text color */
+    margin-top: 0;
+    margin-bottom: 10px; /* Space between the title and the chart */
+    text-align: center; /* Center-align the title */
+}
+
+/* Responsive behavior for smaller screens */
+@media screen and (max-width: 768px) {
+    #ppeGaugeChart {
+        max-width: 100%; /* Full width on smaller screens */
+    }
+}
+
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/Gabarito-VariableFont_wght.ttf') format('truetype');
+}
+@media screen and (max-width: 768px) {
+    .charts-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px; /* Adjust gap between items as needed */
+    align items: stretch;
+}
+
+#userAddedSuccess, #userAddedFailure {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center;
+}
+
+#userAddedSuccess {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+#userAddedFailure {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}

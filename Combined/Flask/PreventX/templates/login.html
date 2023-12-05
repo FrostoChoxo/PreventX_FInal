@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+<!-- and similarly update other paths like images, JS, etc. -->
+
+    <title>PreventX Login Page</title>
+
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+             <img src="{{ url_for('static', filename='images/company_logo.jpeg') }}" alt="Company Logo" >
+        </div>
+<div class="form-container">
+    <!-- Display an error message if it exists -->
+    {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form action="{{ url_for('login') }}" method="post">
+        <input type="text" placeholder="Username" id="username" name="username">
+        <div class="password-container">
+            <input type="password" placeholder="Password" id="password" name="password">
+            <!-- ... -->
+        </div>
+        <!-- ... -->
+        <button type="submit" class="login-btn">LOGIN</button>
+    </form>
+    <!-- ... -->
+</div>
+    </div>
+    <script>
+        function togglePassword() {
+            let passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+    </script>
+</body>
+</html>

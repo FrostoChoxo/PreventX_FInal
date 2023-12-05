@@ -1,0 +1,357 @@
+body, html {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'MyCustomFont';
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+}
+.sidebar {
+    border-right: 50px solid #FFCC3B;
+    width: 300px;
+    background-color: #f4f4f4;
+    height: 100vh;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.menu {
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 20px; /* Spacing at the top of the menu */
+}
+
+.menu li {
+    margin: 0;
+    padding: 0;
+    background-color: #F4F4F4; /* Default background */
+}
+
+.menu button {
+    width: 90%; /* Reduce the width to 90% */
+    height: 50px;
+    background: #ddd;
+    border: none;
+    text-align: left;
+    padding: 20px; /* Adjusted padding for larger touch areas */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex; /* to use flexbox layout */
+    align-items: center; /* vertically center the text and icon */
+    color: #555; /* default text color */
+    border-radius: 20px;
+    margin: 0 auto; /* Center the button horizontally */
+    font-family: 'MyCustomFont';
+}
+
+.menu button span.icon {
+    width: 24px; /* or any desired size */
+    height: 24px;
+    margin-right: 10px; /* spacing between the icon and text */
+    display: inline-block; /* to apply width and height */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.menu button:hover {
+    background-color: #ffd35b;
+    color: #fff; /* change text color on hover */
+}
+
+.menu button:not(:last-child) {
+    border-bottom: 1px solid #e1e1e1; /* Separators */
+}
+
+.menu button.user {
+    background: #FFCC3B; /* Background color for the specific button */
+    color: #000000; /* Text color for the specific button */
+}
+
+
+
+.content {
+    width: 80%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-title h2 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    border-bottom: 3px solid #f7d63a;
+    display: inline-block; /* Makes the underline only as wide as the text */
+}
+
+.form-container {
+    background-color: #f7f7f7;
+    padding: 30px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    width: 90%;
+    margin: auto;
+    overflow: auto;
+    max-height: calc(100vh - 80px); 
+}
+
+form input {
+    width: calc(100% - 150px); /* adjusted width accounting for label */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: top; /* aligns the input with the top of the label */
+}
+
+form button {
+    width: 50%;
+    padding: 10px;
+    background-color: #FFCC3B;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    display: block;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    position: relative; /* Added for absolute positioning of the eye icon */
+}
+
+.input-label {
+    background-color: #f7d63a;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px 5px 5px 5px;
+    font-weight: bold;
+    width: 155px; 
+    text-align: center;
+}
+
+.field-icon {
+    position: absolute;
+    right: 10px; /* Position the eye icon inside the field */
+    top: 50%;
+    transform: translateY(-50%); /* Vertically center the icon */
+    z-index: 2;
+    cursor: pointer;
+}
+
+.company-logo {
+    position: absolute;
+    top: 2px;
+    right: 20px;
+    width: 150px; /* adjust based on the logo's desired size */
+}
+
+.modal {
+    align-items: center;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black with opacity */
+}
+
+.modal-content {
+    background-color: #e6e6e6; /* Modal background color */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 280px; /* Set the width to 280px */
+    height: 152px; /* Set the height to 152px */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    border-radius: 10px; /* Rounded corners */
+
+    /* Centering the modal */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; /* Using flexbox for centering content */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+}
+
+/* Text inside the modal */
+.modal-content h2,
+.modal-content p {
+    text-align: center; /* Center-align text */
+    width: 100%; /* Ensure the text spans the full width */
+}
+
+/* Add Animation */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 50%; opacity: 1}
+}
+
+/* Rest of the styles remain the same */
+
+.modal-buttons button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s; /* Smooth transition for button background color */
+    border-radius: 5px;
+
+}
+
+.modal-buttons button:hover {
+    background-color: #f2f2f2;
+}
+
+#confirmLogout {
+    background-color: rgb(255, 204, 59); /* Orange */
+    color: black;
+    transition: background-color 0.2s; /* Smooth transition for background color */
+}
+
+#confirmLogout:hover {
+    background-color: rgb(229, 183, 52); /* Slightly darker orange on hover */
+    /* Optionally change other properties like color or box-shadow */
+}
+
+#cancelButton {
+    background-color: white; /* White */
+    color: black;
+    transition: background-color 0.2s; /* Smooth transition for background color */
+}
+
+#cancelButton:hover {
+    background-color: #e6e6e6; /* Light grey background on hover */
+    /* Optionally change other properties like color or box-shadow */
+}
+
+
+/* The Close Button (if you decide to add one later) */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 128, 128, 0.7); /* Grey with opacity */
+    display: none; /* Initially hidden */
+    z-index: 1; /* Display below the popup */
+
+}
+
+.password-error {
+    display: none; /* Initially hidden */
+    color: red; /* Error color */
+    font-size: 15px; /* Smaller font size for the error message */
+    position: absolute; /* Absolute positioning relative to the input group */
+    top: 85%; /* Place it right below the input field */
+    left: 175px; /* Align it to the left side of the input field */
+    padding-top: 5px; /* Additional spacing above the error message */
+}
+
+/* Icons */
+.menu button.home span.icon {
+    background-image: url('../icons/home.png');
+}
+.menu button.camera span.icon {
+    background-image: url('../icons/video.png');
+}
+.menu button.user span.icon {
+    background-image: url('../icons/add-user.png');
+}
+.menu button.alert span.icon {
+    background-image: url('../icons/danger.png');
+}
+.menu button.analytics span.icon {
+    background-image: url('../icons/analytics.png');
+}
+.menu button.logout span.icon {
+    background-image: url('../icons/logout.png');
+}
+.notification {
+    background-color: rgb(255, 204, 59);
+    color: black;
+    text-align: center;
+    padding: 13px;
+    position: absolute;
+    top: 10px;
+    width: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    border-radius: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 5px;
+    cursor: pointer;
+    color: black;
+}
+
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/Gabarito-VariableFont_wght.ttf') format('truetype');
+}
+

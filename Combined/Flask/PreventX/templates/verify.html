@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .verification-form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        .verification-form h2 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+
+        .verification-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .verification-form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #FFCC3B;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .verification-form button:hover {
+            background-color: #cda933;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-form">
+        <h2>Verification</h2>
+        <form action="{{ url_for('verify') }}" method="post">
+            <input type="hidden" name="generated_code" value="{{ generated_code }}">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <input type="text" name="input_code" placeholder="Enter Verification Code">
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+</body>
+</html>

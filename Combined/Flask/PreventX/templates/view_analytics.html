@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/viewanalytics.css') }}">
+    <title>Analytics -Prevent-X</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-pic">
+                    PX
+                </div>
+                <div>
+                    {{ username }}<br>
+                    <small>{{ email }}</small>
+                </div>
+            </div>
+
+            <ul class="menu">
+            <h2>Menu</h2>
+            <li><button class="home" onclick="window.location.href='{{ url_for('home') }}';"><span class="icon"></span>Home</button></li>
+            <br />
+            <li><button class="camera" onclick="window.location.href='{{ url_for('camerafeed') }}';"><span class="icon"></span>View Camera Feed</button></li>
+            <br />
+            <li><button class="user" onclick="window.location.href='{{ url_for('add_user') }}';"><span class="icon"></span>Add User</button></li>
+            <br />
+            <li><button class="alert" onclick="window.location.href='{{ url_for('alert') }}';"><span class="icon"></span>View Alert Logs</button></li>
+            <br />
+            <li><button class="analytics" onclick="window.location.href='{{ url_for('view_analytics') }}';"><span class="icon"></span>View Analytics</button></li>
+            <br />
+            <li><button class="logout"><span class="icon"></span>Logout</button></li>
+        </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <img src="{{ url_for('static', filename='images/company_logo.jpeg') }}" alt="Company Logo" class="company-logo">
+         <div id="notificationContainer"></div>
+        <div class="form-container">
+            <h2>Analytics</h2>
+            <div class="button-container">
+                <button id="btnAnalytics" class="analytics-button">Analytics Bar Graph (Count)</button>
+                <button id="btnPieChart" class="analytics-button">Distribution of Alerts</button>
+                <button id="btnLineChart" class="analytics-button">Alerts Over Time Period</button>
+            </div>
+
+
+            <div class="ali">
+                     <div id="analyticsGraphs" class="canvas-container">
+                        <canvas id="analyticsChart"></canvas>
+                     </div>
+                    <div id="pieChartContainer" class="canvas-container" style="display:none;">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div id="lineChartContainer" class="canvas-container" style="display:none;">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+     <audio id="alertSound" src="{{ url_for('static', filename='notif.mp3') }}" type="audio/mp3"></audio>
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Logout</h2>
+            <p>Are you sure?</p>
+            <div class="modal-buttons">
+                <button id="cancelButton">Cancel</button>
+                <button id="confirmLogout">LOGOUT</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // References to the logout button and modal elements
+            const logoutButton = document.querySelector('.logout');
+            const logoutModal = document.getElementById('logoutModal');
+            const overlay = document.querySelector('#overlay');
+            const cancelButton = document.getElementById('cancelButton');
+            const confirmLogout = document.getElementById('confirmLogout');
+
+            // Show the modal when the logout button is clicked
+            logoutButton.addEventListener('click', function () {
+                logoutModal.style.display = 'block';
+            });
+
+            // Hide the modal when the cancel button is clicked
+            cancelButton.addEventListener('click', function () {
+                logoutModal.style.display = 'none';
+            });
+
+            // Implement your logout functionality when the confirm button is clicked
+            confirmLogout.addEventListener('click', function () {
+                // Add your logout code here
+                console.log('Logging out...');
+                logoutModal.style.display = 'login.html';
+                window.location.href = '/logout';
+            });
+
+            logoutButton.addEventListener('click', function () {
+                overlay.style.display = 'block'; // Show the overlay when the popup is displayed
+            });
+
+            confirmLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+            cancelLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+
+        });
+
+    </script>
+<script type="module">
+    import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('new_alert', function (data) {
+            var notification = document.createElement('div');
+            notification.className = 'notification';
+
+            var closeBtn = document.createElement('span');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.className = 'close-btn';
+
+            // Close button functionality
+            closeBtn.onclick = function() {
+                notification.remove();
+            };
+
+            notification.appendChild(closeBtn);
+            notification.appendChild(document.createTextNode("New Alert: " + data.category));
+
+            document.getElementById('notificationContainer').appendChild(notification);
+
+            // Auto-remove after 5 seconds
+            setTimeout(function() {
+                notification.remove();
+            }, 5000);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('new_alert', function (data) {
+        // Play the alert sound
+        var sound = document.getElementById('alertSound');
+        sound.play();
+
+        // Existing code to create and append the notification...
+    });
+});
+
+</script>
+
+<script>
+    //For Bar-graph
+    fetch('/analytics_data')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            const analyticsChart = new Chart(ctx, {
+                type: 'bar',  // or other chart types like 'line', 'pie', etc.
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        label: 'Alerts Count',
+                        data: Object.values(data),
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
+    // For Pie Chart
+    fetch('/alert_types_distribution')
+    .then(response => response.json())
+    .then(data => {
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Audio', 'PPE', 'Risk_Zone', 'Safety'],
+                datasets: [{
+                    data: data.data,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                }]
+            }
+        });
+    });
+
+    // For Line Chart
+    fetch('/alerts_over_time')
+        .then(response => response.json())
+        .then(data => {
+            const ctxLine = document.getElementById('lineChart').getContext('2d');
+            new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: data.labels, // Array of dates
+                    datasets: data.datasets // Array of datasets, each representing a type of alert
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to show the selected chart and highlight the button
+    function showChart(chartId, button) {
+        var chartContainers = ['analyticsGraphs', 'pieChartContainer', 'lineChartContainer'];
+        var buttons = document.querySelectorAll('.analytics-button');
+
+        // Hide all charts and remove 'active' class from all buttons
+        chartContainers.forEach(function(id) {
+            document.getElementById(id).style.display = 'none';
+        });
+        buttons.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+
+        // Show the selected chart and add 'active' class to the clicked button
+        document.getElementById(chartId).style.display = 'block';
+        button.classList.add('active');
+    }
+
+    // Add event listeners to buttons
+    document.getElementById('btnAnalytics').addEventListener('click', function() {
+        showChart('analyticsGraphs', this);
+    });
+    document.getElementById('btnPieChart').addEventListener('click', function() {
+        showChart('pieChartContainer', this);
+    });
+    document.getElementById('btnLineChart').addEventListener('click', function() {
+        showChart('lineChartContainer', this);
+    });
+
+    // Initially show the analytics chart and highlight the button
+    showChart('analyticsGraphs', document.getElementById('btnAnalytics'));
+});
+
+
+</script>
+
+</body>
+</html>

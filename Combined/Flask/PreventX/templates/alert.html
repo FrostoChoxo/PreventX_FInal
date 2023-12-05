@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Alert Logs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/alert.css') }}">
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-pic">
+                    PX
+                </div>
+                <div>
+                    {{ username }}<br>
+                    <small>{{ email }}</small>
+                </div>
+            </div>
+
+            <ul class="menu">
+                <h2>Menu</h2>
+                <li><button class="home" onclick="window.location.href='{{ url_for('home') }}';"><span
+                            class="icon"></span>Home</button></li>
+                <br />
+                <li><button class="camera" onclick="window.location.href='{{ url_for('camerafeed') }}';"><span
+                            class="icon"></span>View Camera Feed</button></li>
+                <br />
+                <li><button class="user" onclick="window.location.href='{{ url_for('add_user') }}';"><span
+                            class="icon"></span>Add User</button></li>
+                <br />
+                <li><button class="alert" onclick="window.location.href='{{ url_for('alert') }}';"><span
+                            class="icon"></span>View Alert Logs</button></li>
+                <br />
+                <li><button class="analytics" onclick="window.location.href='{{ url_for('view_analytics') }}';"><span
+                            class="icon"></span>View Analytics</button></li>
+                <br />
+                <li><button class="logout"><span class="icon"></span>Logout</button></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/company_logo.jpeg') }}" alt="Company Logo"
+                class="company-logo">
+        </div>
+
+        <div id="notificationContainer"></div>
+        <div class="form-container">
+            <h2>Categories</h2>
+            <div class="tabs">
+                <button class="tab-button" onclick="openCategory('PPE')">PPE</button>
+                <button class="tab-button" onclick="openCategory('Injury')">Injury</button>
+                <button class="tab-button" onclick="openCategory('RiskZone')">Risk Zone</button>
+                <button class="tab-button" onclick="openCategory('AudioCrash')">AudioCrash</button>
+            </div>
+            <div id="PPE" class="tab-content" style="display: flex;">
+                <!-- PPE content goes here -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alert ID</th>
+                            <th>Date and Time</th>
+                            <th>Detection</th>
+                            <th>Camera ID</th>
+                            <th>Location</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                   <tbody id="alerts-table-body">
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="Injury" class="tab-content">
+                <!-- Injury content goes here -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alert ID</th>
+                            <th>Date and Time</th>
+                            <th>Detection</th>
+                            <th>Camera ID</th>
+                            <th>Location</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-injury">
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="RiskZone" class="tab-content">
+                <!-- Risk Zone content goes here -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alert ID</th>
+                            <th>Date and Time</th>
+                            <th>Detection</th>
+                            <th>Camera ID</th>
+                            <th>Location</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alert-risk">
+                        <!-- Example row -->
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="AudioCrash" class="tab-content">
+                <!-- AudioCrash content goes here -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alert ID</th>
+                            <th>Date and Time</th>
+                            <th>Detection</th>
+                            <th>Camera ID</th>
+                            <th>Location</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody id="audio-crash">
+                        <!-- Example row -->
+
+                        <!-- More rows can be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Logout</h2>
+            <p>Are you sure?</p>
+            <div class="modal-buttons">
+                <button id="cancelButton">Cancel</button>
+                <button id="confirmLogout">LOGOUT</button>
+            </div>
+        </div>
+    </div>
+    <audio id="alertSound" src="{{ url_for('static', filename='notif.mp3') }}" type="audio/mp3"></audio>
+
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // References to the logout button and modal elements
+            const logoutButton = document.querySelector('.logout');
+            const logoutModal = document.getElementById('logoutModal');
+            const overlay = document.querySelector('#overlay');
+            const cancelButton = document.getElementById('cancelButton');
+            const confirmLogout = document.getElementById('confirmLogout');
+
+            // Show the modal when the logout button is clicked
+            logoutButton.addEventListener('click', function () {
+                logoutModal.style.display = 'block';
+            });
+
+            // Hide the modal when the cancel button is clicked
+            cancelButton.addEventListener('click', function () {
+                logoutModal.style.display = 'none';
+            });
+
+            // Implement your logout functionality when the confirm button is clicked
+            confirmLogout.addEventListener('click', function () {
+                // Add your logout code here
+                console.log('Logging out...');
+                logoutModal.style.display = 'login.html';
+                window.location.href = '/logout';
+            });
+
+            logoutButton.addEventListener('click', function () {
+                overlay.style.display = 'block'; // Show the overlay when the popup is displayed
+            });
+
+            confirmLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+            cancelLogout.addEventListener('click', function () {
+                overlay.style.display = 'none'; // Hide the overlay when the popup is closed
+            });
+
+
+        });
+
+        function openCategory(categoryName) {
+            var i, tabcontent, tabbuttons;
+
+            // Get all elements with class="tab-content" and hide them
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tab-button" and remove the class "active"
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(categoryName).style.display = "block";
+            event.currentTarget.classList.add("active");
+        }
+
+        // Optionally: Automatically click on the first tab to display it by default
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector('.tab-button').click();
+        });
+
+
+    </script>
+
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+        document.addEventListener('DOMContentLoaded', function () {
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    // Function to determine the correct table body based on the category
+    function getTableBodyByCategory(category) {
+        switch (category) {
+            case 'PPE':
+                return document.getElementById('alerts-table-body');
+            case 'Safety':
+                return document.getElementById('alerts-injury');
+            case 'Risk_Zone':
+                return document.getElementById('alert-risk');
+            case 'Audio':
+                return document.getElementById('audio-crash');
+            default:
+                console.error('Unknown category:', category);
+                return null; // Or a default table body if you have one
+        }
+    }
+
+    // Function to add an alert to the correct table
+    function addAlertToTable(data) {
+        var tableBody = getTableBodyByCategory(data.category);
+        if (!tableBody) return; // If category is unknown, don't add the alert
+
+        var row = tableBody.insertRow(0); // Insert a row at the top of the table body
+
+        // Insert cells (<td>) and set their innerHTML to the data received
+        row.insertCell(0).innerHTML = data.serial_no;
+        row.insertCell(1).innerHTML = data.alert_time;
+        row.insertCell(2).innerHTML = data.detection_type;
+        row.insertCell(3).innerHTML = data.camera_id;
+        row.insertCell(4).innerHTML = data.camera_location;
+
+        // Add the view button with an event listener to open the image
+        if (data.category !== 'Audio') {
+                    var viewCell = row.insertCell(5);
+                    var viewButton = document.createElement('button');
+                    viewButton.innerHTML = 'View';
+                    viewButton.addEventListener('click', function () {
+                        const imageUrl = `${data.image_url}`; // Modify this line based on your directory structure
+                        window.open(window.location.origin + imageUrl);
+                    });
+                    viewCell.appendChild(viewButton);
+                }
+    }
+
+    // Fetch existing alerts on page load
+    fetch('/get_alerts')
+        .then(response => response.json())
+        .then(alerts => {
+            alerts.forEach(alert => addAlertToTable(alert));
+        })
+        .catch(error => console.error('Error fetching alerts:', error));
+
+            socket.on('new_alert', function (data) {
+                var sound = document.getElementById('alertSound');
+                sound.play();
+                var tableBody = getTableBodyByCategory(data.category);
+                if (!tableBody) {
+                    console.error('No table body found for category:', data.category);
+                    return; // Stop if no appropriate table body is found
+                }
+
+                var row = tableBody.insertRow(0); // Insert a row at the top of the corresponding table body
+
+                // Insert cells (<td>) and set their innerHTML to the data received
+                row.insertCell(0).innerHTML = data.serial_no;
+                row.insertCell(1).innerHTML = data.alert_time;
+                row.insertCell(2).innerHTML = data.detection_type;
+                row.insertCell(3).innerHTML = data.camera_id;
+                row.insertCell(4).innerHTML = data.camera_location;
+
+                // Add the view button with an event listener to open the image
+                if (data.category !== 'Audio') {
+                    var viewCell = row.insertCell(5);
+                    var viewButton = document.createElement('button');
+                    viewButton.innerHTML = 'View';
+                    viewButton.addEventListener('click', function () {
+                        const imageUrl = `${data.image_url}`; // Modify this line based on your directory structure
+                        window.open(window.location.origin + imageUrl);
+                    });
+                    viewCell.appendChild(viewButton);
+                }
+
+                // Notification for new alert
+                var notification = document.createElement('div');
+                notification.className = 'notification';
+                var closeBtn = document.createElement('span');
+                closeBtn.innerHTML = '&times;';
+                closeBtn.className = 'close-btn';
+
+                // Close button functionality
+                closeBtn.onclick = function () {
+                    notification.remove();
+                };
+
+                notification.appendChild(closeBtn);
+                notification.appendChild(document.createTextNode("New Alert: " + data.category));
+                document.getElementById('notificationContainer').appendChild(notification);
+
+                // Auto-remove after 5 seconds
+                setTimeout(function () {
+                    notification.remove();
+                }, 5000);
+            });
+        });
+    </script>
+    
+</body>
+</html>
