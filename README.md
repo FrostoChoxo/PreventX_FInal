@@ -36,7 +36,26 @@ Before running the application, ensure you have the following installed:
         password VARCHAR(255) NOT NULL
     );
 
-    -- Add more table creation statements as needed
+    CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    employee_id VARCHAR(10) NOT NULL
+    );
+
+    CREATE TABLE alerts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        serial_no VARCHAR(120) NOT NULL,
+        alert_time DATETIME NOT NULL,
+        category VARCHAR(50) NOT NULL,
+        detection_type VARCHAR(50) NOT NULL,
+        camera_id VARCHAR(50),
+        camera_location VARCHAR(100),
+        image_url VARCHAR(255)
+    );
+
+
     ```
 
 2. Configure the database connection in the `config.py` file.
