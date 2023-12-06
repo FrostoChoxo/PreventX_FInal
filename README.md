@@ -1,149 +1,103 @@
-# PreventX_FInal
-Safety Monitoring Web Application
-Overview
+# Safety Monitoring Web Application
+
+## Overview
+
 This GitHub repository contains a web application designed for safety monitoring in industrial environments. The project includes features such as:
 
-Detection of individuals without hardhats and vests
-Counting the number of persons in a designated zone
-Audio threshold detection in the environment
+- Detection of individuals without hardhats and vests
+- Counting the number of persons in a designated zone
+- Audio threshold detection in the environment
+
 Additionally, the repository includes a separate module for forklift avoidance, where cameras mounted on the front and back of a forklift detect the presence of individuals in close proximity. When a person is detected, an alert sound is triggered, and the forklift stops until the situation is deemed safe.
 
-Getting Started
-Prerequisites
+## Getting Started
+
+### Prerequisites
+
 Before running the application, ensure you have the following installed:
 
-Python (>=3.6)
-Flask
-OpenCV
-Other dependencies (specified in requirements.txt)
-Installation
-Clone the repository to your local machine:
+- Python (>=3.6)
+- Flask
+- OpenCV
+- MySQL Server
+- Other dependencies (specified in `requirements.txt`)
 
-bash
-Copy code
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
-Install the required dependencies:
+### Database Setup
 
-bash
-Copy code
-pip install -r requirements.txt
-Running the Application
-Start the Flask server:
+1. Initialize a MySQL database with the following table creation statements:
 
-bash
-Copy code
-python app.py
-Open a web browser and navigate to http://localhost:5000 to access the login page.
+    ```sql
+    CREATE DATABASE IF NOT EXISTS safety_monitoring;
+    USE safety_monitoring;
 
-Log in with your credentials to access the main web pages.
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL
+    );
 
-Turn on the camera feed in the background to enable safety monitoring features.
+    -- Add more table creation statements as needed
+    ```
 
-Project Structure
-app.py: Main Flask application file.
-templates/: HTML templates for the web pages.
-static/: Static files (CSS, JavaScript, images).
-utils/: Utility functions for camera feed, person detection, audio threshold, etc.
-forklift_avoidance/: Module for forklift avoidance system.
-Forklift Avoidance System
-The forklift avoidance system is implemented in the forklift_avoidance module. It includes:
+2. Configure the database connection in the `config.py` file.
 
-Detection of persons in close proximity to the forklift using front and back cameras.
-Triggering an alert sound and stopping the forklift when a person is detected.
-Resuming normal operation after ensuring the area is clear.
-For detailed usage and configuration, refer to the documentation in the forklift_avoidance/README.md file.
+### Installation
 
-Contributors
-Your Name your.email@example.com
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+1. Clone the repository to your local machine:
 
-Acknowledgments
-Mention any libraries, frameworks, or individuals whose code or work inspired or was used in this project.
-User
+   ```bash
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
+   ```
 
-also we have to initialize a database in mysql with certain create table statements and turn on the db server before starting the application.
-ChatGPT
-Safety Monitoring Web Application
-Overview
-This GitHub repository contains a web application designed for safety monitoring in industrial environments. The project includes features such as:
+2. Install the required dependencies:
 
-Detection of individuals without hardhats and vests
-Counting the number of persons in a designated zone
-Audio threshold detection in the environment
-Additionally, the repository includes a separate module for forklift avoidance, where cameras mounted on the front and back of a forklift detect the presence of individuals in close proximity. When a person is detected, an alert sound is triggered, and the forklift stops until the situation is deemed safe.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Getting Started
-Prerequisites
-Before running the application, ensure you have the following installed:
+### Running the Application
 
-Python (>=3.6)
-Flask
-OpenCV
-MySQL Server
-Other dependencies (specified in requirements.txt)
-Database Setup
-Initialize a MySQL database with the following table creation statements:
+1. Start the MySQL server and initialize the database.
 
-sql
-Copy code
-CREATE DATABASE IF NOT EXISTS safety_monitoring;
-USE safety_monitoring;
+2. Start the Flask server:
 
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
+   ```bash
+   python app.py
+   ```
 
--- Add more table creation statements as needed
-Configure the database connection in the config.py file.
+3. Open a web browser and navigate to `http://localhost:5000` to access the login page.
 
-Installation
-Clone the repository to your local machine:
+4. Log in with your credentials to access the main web pages.
 
-bash
-Copy code
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
-Install the required dependencies:
+5. Turn on the camera feed in the background to enable safety monitoring features.
 
-bash
-Copy code
-pip install -r requirements.txt
-Running the Application
-Start the MySQL server and initialize the database.
+## Project Structure
 
-Start the Flask server:
+- `app.py`: Main Flask application file.
+- `templates/`: HTML templates for the web pages.
+- `static/`: Static files (CSS, JavaScript, images).
+- `utils/`: Utility functions for camera feed, person detection, audio threshold, etc.
+- `forklift_avoidance/`: Module for forklift avoidance system.
 
-bash
-Copy code
-python app.py
-Open a web browser and navigate to http://localhost:5000 to access the login page.
+## Forklift Avoidance System
 
-Log in with your credentials to access the main web pages.
+The forklift avoidance system is implemented in the `forklift_avoidance` module. It includes:
 
-Turn on the camera feed in the background to enable safety monitoring features.
+- Detection of persons in close proximity to the forklift using front and back cameras.
+- Triggering an alert sound and stopping the forklift when a person is detected.
+- Resuming normal operation after ensuring the area is clear.
 
-Project Structure
-app.py: Main Flask application file.
-templates/: HTML templates for the web pages.
-static/: Static files (CSS, JavaScript, images).
-utils/: Utility functions for camera feed, person detection, audio threshold, etc.
-forklift_avoidance/: Module for forklift avoidance system.
-Forklift Avoidance System
-The forklift avoidance system is implemented in the forklift_avoidance module. It includes:
+For detailed usage and configuration, refer to the documentation in the `forklift_avoidance/README.md` file.
 
-Detection of persons in close proximity to the forklift using front and back cameras.
-Triggering an alert sound and stopping the forklift when a person is detected.
-Resuming normal operation after ensuring the area is clear.
-For detailed usage and configuration, refer to the documentation in the forklift_avoidance/README.md file.
+## Contributors
 
-Contributors
-Your Name your.email@example.com
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+- Your Name <your.email@example.com>
 
-Acknowledgments
-Mention any libraries, frameworks, or individuals whose code or work inspired or was used in this project.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Mention any libraries, frameworks, or individuals whose code or work inspired or was used in this project.
