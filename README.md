@@ -104,15 +104,14 @@ app.config['MYSQL_DB'] = 'safety_monitoring'  # Replace with your desired databa
 
 ## Project Structure
 
-- `app.py`: Main Flask application file.
+- `app_db.py`: Main Flask application file.
 - `templates/`: HTML templates for the web pages.
 - `static/`: Static files (CSS, JavaScript, images).
-- `utils/`: Utility functions for camera feed, person detection, audio threshold, etc.
-- `forklift_avoidance/`: Module for forklift avoidance system.
+- `collision_avoidance`: File for forklift avoidance system.
 
 ## Forklift Avoidance System
 
-The forklift avoidance system is implemented in the `forklift_avoidance` module. It includes:
+The forklift avoidance system is implemented in the `collision_avoidance` file. It includes:
 
 - Detection of persons in close proximity to the forklift using front and back cameras.
 - Triggering an alert sound and stopping the forklift when a person is detected.
