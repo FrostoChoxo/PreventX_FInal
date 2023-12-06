@@ -62,9 +62,9 @@ Before running the application, ensure you have the following installed:
 
 Open the app_db.py file in your project, goto line 51.
 
-```Python
-Modify the following lines to match your MySQL server configuration:
 
+Modify the following lines to match your MySQL server configuration:
+```Python
 app.config['MYSQL_HOST'] = 'your_mysql_server_address'  # Replace with your MySQL server address
 app.config['MYSQL_USER'] = 'your_mysql_username'
 app.config['MYSQL_PASSWORD'] = 'your_mysql_password'
