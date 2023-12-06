@@ -1,6 +1,6 @@
-#Safety Monitoring Web Application
+# Safety Monitoring Web Application
 
-##Overview
+## Overview
 
 This GitHub repository contains a web application designed for safety monitoring in industrial environments. The project includes features such as:
 
