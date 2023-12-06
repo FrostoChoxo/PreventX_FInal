@@ -117,16 +117,17 @@ The forklift avoidance system is implemented in the `collision_avoidance` file. 
 - Triggering an alert sound and stopping the forklift when a person is detected.
 - Resuming normal operation after ensuring the area is clear.
 
-For detailed usage and configuration, refer to the documentation in the `forklift_avoidance/README.md` file.
+A minimum of 2 Cameras should be connected while running this program.
 
 ## Contributors
 
-- Your Name <your.email@example.com>
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Harsh Goreja
+- Afaan Suhani
+- Mohammed Adnan Parkar
+- Raffi Daghlian
+- Rohan Francis
 
 ## Acknowledgments
 
-- Mention any libraries, frameworks, or individuals whose code or work inspired or was used in this project.
+His Project on YOLO v8 based objects deteciton, gave us a baseline for our project.
+- (https://github.com/MuhammadMoinFaisal)https://github.com/MuhammadMoinFaisal
