@@ -24,6 +24,7 @@ Before running the application, ensure you have the following installed:
 
 ### Database Setup
 
+
 1. Initialize a MySQL database with the following table creation statements:
 
     ```sql
@@ -57,8 +58,18 @@ Before running the application, ensure you have the following installed:
 
 
     ```
+2. Application Configuration:
 
-2. Configure the database connection in the `config.py` file.
+Open the app_db.py file in your project, goto line 51.
+
+```Python
+Modify the following lines to match your MySQL server configuration:
+
+app.config['MYSQL_HOST'] = 'your_mysql_server_address'  # Replace with your MySQL server address
+app.config['MYSQL_USER'] = 'your_mysql_username'
+app.config['MYSQL_PASSWORD'] = 'your_mysql_password'
+app.config['MYSQL_DB'] = 'safety_monitoring'  # Replace with your desired database name
+```
 
 ### Installation
 
