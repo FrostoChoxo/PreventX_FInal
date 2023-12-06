@@ -93,14 +93,14 @@ app.config['MYSQL_DB'] = 'safety_monitoring'  # Replace with your desired databa
 2. Start the Flask server:
 
    ```bash
-   python app.py
+   python app_db.py
    ```
 
-3. Open a web browser and navigate to `http://localhost:5000` to access the login page.
+3. Open a web browser and navigate to `http://localhost:5000` to access the login page or navigate to the link shown in Terminal.
 
 4. Log in with your credentials to access the main web pages.
 
-5. Turn on the camera feed in the background to enable safety monitoring features.
+5. Give Access to the camera feed in the background to enable safety monitoring features.
 
 ## Project Structure
 
